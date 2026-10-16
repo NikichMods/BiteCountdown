@@ -1,5 +1,33 @@
 # Verified Runtime Data
 
+## Temporary final-size calibration — 0.4.0 research
+
+User/player feedback reports apparent completion before the native bite: the ring
+reaches the visible bobber before reaching its very small accepted final scale.
+Source confirms the ring renders behind the bobber. This supports, but does not
+yet runtime-prove, occlusion as the explanation of the perceived early signal.
+
+Adopted direction (2026-10-16): tune the final ring scale rather than introduce a
+fixed time offset. A spatial endpoint remains independent of native wait length.
+Keep the native timer, lifecycle, anchor, initial size, alpha and lighting intact.
+
+**READY evidence gate:** `ApplyRingVisual` is the sole writer of ring local scale;
+its only inputs come from initial display and `AnimateRing`'s read-only native
+remaining/initial wait ratio. Only final scale changes. The new research-only
+plugin `Update` reads F3/F4/F5, and `OnGUI` draws a read-only panel; neither patches
+host Update nor consumes fishing input. Existing state-exit cleanup and missed-hook
+re-arm remain unchanged. Clean compilation and source-diff review precede handoff;
+real-game acceptance must confirm F3 UI, live adjustment, short/long waits and both
+facings. No perceptual acceptance is claimed by compilation.
+
+Research controls: F3 shows/hides the panel; while visible F4 decreases and F5
+increases final scale by 0.02. Range is 0.08–0.60, initial value 0.08. The bounded
+BepInEx config entry persists the value between launches; the panel shows the
+resulting scale. No mouse controls, time changes or game-save writes are added.
+The final value is not accepted yet. After user calibration, freeze the chosen
+scale and remove the panel, hotkeys and temporary config binding before stable
+promotion. Stable accepted baseline remains 1.0.3.
+
 Target: **Graveyard Keeper 1.407**.
 
 Verified Assembly-CSharp identity used during research:

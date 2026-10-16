@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using BepInEx;
+using BepInEx.Configuration;
 using HarmonyLib;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace BiteCountdown
     {
         public const string PluginGuid = "nikich.bitecountdown";
         public const string PluginName = "Bite Countdown";
-        public const string PluginVersion = "1.0.3";
+        public const string PluginVersion = "0.4.0";
 
         private const BindingFlags AllInstance =
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -24,6 +25,10 @@ namespace BiteCountdown
         private const int RingHeight = 32;
         private const float RingStartScale = 1.55f;
         private const float RingEndScale = 0.08f;
+        // Temporary research-only calibration; remove after visual acceptance.
+        private const float EndScaleStep = 0.02f;
+        private const int MinimumEndScaleStep = 4;
+        private const int MaximumEndScaleStep = 30;
         private const int SpriteOffsetXPixels = -2;
         private const int SpriteOffsetYPixels = -2;
         private const float RingColorR = 0.60f;
@@ -48,6 +53,9 @@ namespace BiteCountdown
         private int _ringGeneration;
         private float _ambientColorFactor = 1f;
         private bool _runtimeFailed;
+        private ConfigEntry<int> _endScaleStep;
+        private bool _showCalibration;
+        private GUIStyle _calibrationTextStyle;
 
         private void Awake()
         {
@@ -55,6 +63,16 @@ namespace BiteCountdown
 
             try
             {
+                _endScaleStep = Config.Bind(
+                    "TemporaryCalibration",
+                    "EndSizeStep",
+                    MinimumEndScaleStep,
+                    new ConfigDescription(
+                        "Temporary final ring size: step * 0.02. F3 opens the panel; F4/F5 adjust it.",
+                        new AcceptableValueRange<int>(
+                            MinimumEndScaleStep,
+                            MaximumEndScaleStep)));
+
                 _fishingGuiType = AccessTools.TypeByName("FishingGUI");
                 if (_fishingGuiType == null)
                     throw new InvalidOperationException("FishingGUI type was not found.");
@@ -83,6 +101,68 @@ namespace BiteCountdown
             {
                 Fail("initialization", ex);
             }
+        }
+
+        private void Update()
+        {
+            if (_runtimeFailed || _endScaleStep == null)
+                return;
+
+            if (Input.GetKeyDown(KeyCode.F3))
+                _showCalibration = !_showCalibration;
+
+            if (!_showCalibration)
+                return;
+
+            var adjustment = 0;
+            if (Input.GetKeyDown(KeyCode.F4))
+                adjustment--;
+            if (Input.GetKeyDown(KeyCode.F5))
+                adjustment++;
+
+            if (adjustment != 0)
+            {
+                _endScaleStep.Value = Mathf.Clamp(
+                    _endScaleStep.Value + adjustment,
+                    MinimumEndScaleStep,
+                    MaximumEndScaleStep);
+            }
+        }
+
+        private void OnGUI()
+        {
+            if (!_showCalibration || _runtimeFailed || _endScaleStep == null)
+                return;
+
+            if (_calibrationTextStyle == null)
+            {
+                _calibrationTextStyle = new GUIStyle(GUI.skin.label)
+                {
+                    fontSize = 16,
+                    wordWrap = true
+                };
+                _calibrationTextStyle.normal.textColor = Color.white;
+            }
+
+            GUI.Box(new Rect(16f, 16f, 440f, 166f), GUIContent.none);
+            GUI.Label(
+                new Rect(30f, 26f, 412f, 146f),
+                "Bite Countdown 0.4.0 — калибровка\n"
+                    + "Конечный размер: "
+                    + GetEndScale().ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
+                    + "\nF4 — меньше    F5 — больше    Шаг: 0.02\n"
+                    + "F3 — скрыть / показать\n"
+                    + "Диапазон: 0.08–0.60. Значение сохраняется.\n"
+                    + "Больше размер — позже касание поплавка.",
+                _calibrationTextStyle);
+        }
+
+        private float GetEndScale()
+        {
+            return _endScaleStep == null
+                ? RingEndScale
+                : Mathf.Clamp(_endScaleStep.Value,
+                    MinimumEndScaleStep, MaximumEndScaleStep) * EndScaleStep;
         }
 
         private void OnDestroy()
@@ -338,7 +418,7 @@ namespace BiteCountdown
                 return;
 
             var scale = Mathf.Lerp(
-                RingEndScale,
+                GetEndScale(),
                 RingStartScale,
                 Mathf.Clamp01(remainingRatio));
 
