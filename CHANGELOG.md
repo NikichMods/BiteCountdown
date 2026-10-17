@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.7 — candidate
+## 1.0.7 — 2026-10-17
 
 - Froze the user-calibrated endpoint at 0.26 and fade duration at 0.40 seconds.
 - Removed the temporary F3–F7 controls, panel and configuration bindings.

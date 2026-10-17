@@ -13,7 +13,7 @@ Before substantive technical work, read the current `ENGINEERING_RULES.md`, `CI_
 - Mod stack: **BepInEx / Harmony**
 - BepInEx GUID: `nikich.bitecountdown`
 - Stable installed DLL: `BiteCountdown.dll`
-- Current accepted stable runtime baseline: **1.0.3**
+- Current accepted stable runtime baseline: **1.0.7**
 
 Do not reintroduce the earlier rod-balance product concept into runtime or release naming.
 
@@ -32,7 +32,7 @@ Keep cross-project host/runtime facts in the shared research repository. Keep Bi
 
 Bite Countdown is a visual-only fishing quality-of-life mod.
 
-It adds a subtle in-world ring around the bobber during the native bite-wait interval. The ring contracts across the already-resolved vanilla wait and reaches the bobber when the native bite occurs.
+It adds a subtle in-world ring around the bobber during the native bite-wait interval. The ring contracts across the already-resolved vanilla wait, then briefly continues shrinking and fades as the native bite begins.
 
 The mod must not change:
 
@@ -55,10 +55,11 @@ Follow the global host-native-first gate.
 - No permanent Harmony `Update()` patch, broad polling, or parallel fishing state machine.
 - Unsupported runtime states fail closed by disabling only the countdown.
 
-## Stable 1.0.3 visual behavior
+## Accepted stable 1.0.7 visual behavior
 
 - start scale: `1.55`;
-- end scale: `0.08`;
+- end scale at native bite entry: `0.26`;
+- continue shrinking at the same speed and linearly fade alpha to zero over `0.40` game seconds after bite entry;
 - alpha at full wait: `0.34`;
 - alpha near bite: `0.58`;
 - sprite-local visual correction: `X=-2, Y=-2` game pixels. This preserves the accepted right-facing placement and mirrors the horizontal correction for left-facing fishing;
@@ -67,7 +68,7 @@ Follow the global host-native-first gate.
 - once per native wait, sample final `RenderSettings.ambientLight` at end-of-frame and scale RGB by a bounded factor `0.62 -> 1.00` based on ambient grayscale;
 - brightness adaptation must have no direct dependency on Keeper's Lantern or any other lighting mod.
 
-## Current candidate — 1.0.7
+## Accepted 1.0.7 lifecycle
 
 On 2026-10-17 the user accepted the combined 1.0.6 calibration result:
 `EndSizeStep=13`, `FadeDurationStep=8`: final scale **0.26**, fade **0.40 s**.
@@ -75,9 +76,10 @@ On 2026-10-17 the user accepted the combined 1.0.6 calibration result:
 config bindings. Preserve 1.0.6's main contraction, same-speed visual continuation,
 linear alpha fade, bite-entry snapshot and immediate cleanup on catch/cancel/new
 wait/destruction/failure. Native gameplay timing, anchor, pre-bite opacity and
-lighting remain unchanged. No clip/audio synchronization is claimed. The pair is
-user-accepted; replacement-binary runtime verification and stable promotion remain
-separate. Stable release baseline remains 1.0.3 until promotion.
+lighting remain unchanged. No clip/audio synchronization is claimed. On 2026-10-17
+the user runtime-tested the exact 1.0.7 DLL and explicitly accepted stable release.
+Frozen runtime source: `2f513ebc9b527910645db4535372c7a4269142b5` / `v1.0.7`.
+Publish the exact accepted DLL; never substitute a later rebuild under this version.
 
 ## Diagnostics
 

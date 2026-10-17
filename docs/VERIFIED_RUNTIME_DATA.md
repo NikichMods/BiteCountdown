@@ -1,6 +1,26 @@
 # Verified Runtime Data
 
-## Frozen combined calibration — 1.0.7 candidate
+## Current stable runtime — 1.0.7
+
+Accepted 2026-10-17: the user tested the exact replacement DLL without calibration,
+confirmed correct behavior/feel and explicitly approved stable release. The normal
+loader log identifies 1.0.7, no Bite Countdown disable message was found, and the
+installed digest matches the accepted CI artifact. Production retains only the
+ordinary fatal-disable diagnostic and has no per-frame or separate-file logging.
+
+- frozen runtime source/tag: `2f513ebc9b527910645db4535372c7a4269142b5` / `v1.0.7`;
+- clean Release CI: `39026965766`, artifact `12098613942`;
+- DLL: `BiteCountdown.dll`, assembly/file version `1.0.7.0`;
+- SHA-256: `a2021039c48e629824c4cbb50088e1ccff39ced7d32e8d3b19f9bf52f930c8b9`;
+- main-wait endpoint **0.26**, then same-speed contraction and linear alpha fade
+  over **0.40 game seconds** at native bite entry;
+- no F3–F7 controls, IMGUI, key polling or calibration config binding;
+- native gameplay timing, hook window, alignment, pre-bite opacity and lighting unchanged.
+
+Stable publication uses the exact accepted artifact, not a rebuild. Documentation
+or workflow commits on main may follow the frozen runtime source.
+
+### Final calibration and implementation evidence
 
 On 2026-10-17 the user confirmed the combined motion now feels correct and asked
 to freeze the saved values and remove calibration. Config from the exercised
@@ -17,11 +37,16 @@ snapshot and last renderer writes. No lifecycle/stop, gameplay timer/input,
 anchor, initial scale, pre-bite alpha or ambient-light change is included.
 Source review plus exact-source clean Release CI and installed hash/version
 verification are required. The chosen pair is user-accepted; the replacement
-binary's loading and removal of the panel still need a normal runtime check.
+binary's loading, feel and removal of calibration were subsequently accepted as recorded above.
 
 1.0.7 hardcodes 0.26 / 0.40 s. Back up and remove the dedicated config containing
-only TemporaryCalibration during installation. No stable promotion is implied by
-building/installing this candidate; stable release baseline remains 1.0.3.
+only TemporaryCalibration during installation. That backup/removal was completed;
+the user subsequently approved stable 1.0.7 after testing the replacement DLL.
+
+## Historical calibration evidence
+
+The following sections preserve decisions and gates at their original candidate
+boundaries. Earlier values and pending states are historical, not current defaults.
 
 ## Combined live calibration — 1.0.6 test candidate
 
@@ -264,7 +289,7 @@ Accepted build identity:
 - SHA-256: `77be2d8e0a03197df8e9b82ffb4b6f8971c137f585f44fba50cafd47dc575f02`.
 
 
-## Stable release 1.0.3
+## Historical stable release 1.0.3
 
 Stable accepted runtime source is frozen at `candidate/1.0.3` and tagged `v1.0.3` at commit `2b5c3cfec638098328eaf5707d0e79effb9a1bf6`.
 

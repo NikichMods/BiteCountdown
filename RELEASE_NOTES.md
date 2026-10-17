@@ -1,13 +1,11 @@
-# Bite Countdown 1.0.3
+# Bite Countdown 1.0.7
 
-Improves countdown-ring alignment and brightness.
+Makes the end of the countdown feel smoother and better aligned with the visible bite.
 
-- Fixes the horizontal alignment when fishing to the left.
-- Keeps the already-correct right-facing placement.
-- Uses a softer blue ring colour while preserving the existing alpha curve.
-- Adapts ring RGB brightness to the scene's actual ambient light, including vanilla lighting and darker lighting setups such as Keeper's Lantern.
-- Follows the game's real fish-wait timer and still re-arms after a missed hook.
-- Does not change fishing balance, catches, bait, energy, rarity, or the reeling minigame.
+- Uses a player-calibrated final ring size.
+- Continues shrinking and gently fades out over 0.40 seconds when the bite begins.
+- Requires no configuration or calibration hotkeys.
+- Preserves fishing timings, the hook window, fish selection, bait, energy and the reeling minigame.
 - Stores no custom save data.
 
-Target: Graveyard Keeper 1.407.
+Target: Graveyard Keeper 1.407. Install `BiteCountdown.dll` in `BepInEx/plugins`, replacing the previous copy.

@@ -24,6 +24,6 @@ Verified:
 - missed-hook re-arm: postfix on `FishingGUI.ChangeState` when the resulting state is `WaitingForBite` and `can_take_out == true`;
 - visual progress: session-local coroutine reading the existing native `_waiting_for_bite_delay`;
 - visual anchor: current bobber sprite tight-mesh center plus accepted pixel offset;
-- current 1.0.7 candidate visual finish: freeze the user-accepted endpoint 0.26 and fade 0.40 game seconds. On native `WaitingForPulling`, continue contraction at the same speed and linearly fade alpha. Temporary F3–F7 calibration is removed. Any other state, cancellation, new wait or failure stops the ring immediately. Stable 1.0.3 and the earlier 1.0.4 candidate stopped at bite entry.
+- accepted stable 1.0.7 visual finish: endpoint 0.26 and fade 0.40 game seconds. On native `WaitingForPulling`, continue contraction at the same speed and linearly fade alpha. Temporary F3–F7 calibration is removed. Any other state, cancellation, new wait or failure stops the ring immediately. User accepted the exact 1.0.7 DLL on 2026-10-17. Historical stable 1.0.3 and the earlier 1.0.4 candidate stopped at bite entry.
 
 Production does not write fishing state, wait values, catch data, bait data, energy, achievements, or save data.
