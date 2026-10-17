@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.5 — candidate
+
+- Continues ring contraction at the same speed while fading out over 0.15 seconds after the native bite begins.
+- Keeps the calibrated main countdown endpoint at 0.22.
+- Cancels the visual tail on a catch, cancellation or new bite wait; fishing mechanics remain unchanged.
+
 ## 1.0.4 — candidate
 
 - Increased final ring scale to the player-calibrated 0.22 so the visible contraction better matches the perceived bite timing.

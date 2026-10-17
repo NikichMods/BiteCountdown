@@ -13,7 +13,7 @@ namespace BiteCountdown
     {
         public const string PluginGuid = "nikich.bitecountdown";
         public const string PluginName = "Bite Countdown";
-        public const string PluginVersion = "1.0.4";
+        public const string PluginVersion = "1.0.5";
 
         private const BindingFlags AllInstance =
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -24,6 +24,7 @@ namespace BiteCountdown
         private const int RingHeight = 32;
         private const float RingStartScale = 1.55f;
         private const float RingEndScale = 0.22f;
+        private const float BiteFadeDuration = 0.15f;
         private const int SpriteOffsetXPixels = -2;
         private const int SpriteOffsetYPixels = -2;
         private const float RingColorR = 0.60f;
@@ -45,6 +46,8 @@ namespace BiteCountdown
         private Sprite _ringSprite;
         private Texture2D _ringTexture;
         private Coroutine _ringCoroutine;
+        private float _ringShrinkSpeed;
+        private bool _ringFading;
         private int _ringGeneration;
         private float _ambientColorFactor = 1f;
         private bool _runtimeFailed;
@@ -194,6 +197,7 @@ namespace BiteCountdown
                     "WaitingForBite",
                     StringComparison.Ordinal))
                 {
+                    self.StopRing();
                     // Initial casts enter WaitingForBite before the throw animation
                     // allows take-out. Missed hooks return here with can_take_out=true
                     // and no second throw animation, so re-arm from this native state.
@@ -203,6 +207,15 @@ namespace BiteCountdown
                             self.StartRingAfterIdleFrame(__instance));
                     }
 
+                    return;
+                }
+
+                if (string.Equals(
+                    state,
+                    "WaitingForPulling",
+                    StringComparison.Ordinal))
+                {
+                    self.BeginBiteFade(__instance);
                     return;
                 }
 
@@ -277,6 +290,7 @@ namespace BiteCountdown
 
             StartCoroutine(CaptureAmbientColorFactor(generation));
 
+            _ringShrinkSpeed = (RingStartScale - RingEndScale) / initialWait;
             _ringCoroutine = StartCoroutine(
                 AnimateRing(fishingGui, initialWait, generation));
         }
@@ -357,9 +371,64 @@ namespace BiteCountdown
                 alpha);
         }
 
+        private void BeginBiteFade(object fishingGui)
+        {
+            if (_ringFading)
+                return;
+
+            if (_ringCoroutine == null
+                || _ringObject == null
+                || !_ringObject.activeSelf
+                || _ringRenderer == null)
+            {
+                StopRing();
+                return;
+            }
+
+            // Transfer sole visual ownership before the wait coroutine can
+            // observe the state exit and hide the ring.
+            StopCoroutine(_ringCoroutine);
+            _ringFading = true;
+            ApplyRingVisual(0f);
+            _ringCoroutine = StartCoroutine(
+                FadeRingAfterBite(fishingGui, _ringGeneration));
+        }
+
+        private IEnumerator FadeRingAfterBite(object fishingGui, int generation)
+        {
+            var initialColor = _ringRenderer.color;
+            var startedAt = Time.time;
+
+            while (!_runtimeFailed
+                && generation == _ringGeneration
+                && IsState(fishingGui, "WaitingForPulling")
+                && _ringObject != null
+                && _ringRenderer != null)
+            {
+                var elapsed = Mathf.Max(0f, Time.time - startedAt);
+                var progress = Mathf.Clamp01(elapsed / BiteFadeDuration);
+                var scale = Mathf.Max(0f, RingEndScale - _ringShrinkSpeed * elapsed);
+                _ringObject.transform.localScale = new Vector3(scale, scale, 1f);
+                _ringRenderer.color = new Color(
+                    initialColor.r,
+                    initialColor.g,
+                    initialColor.b,
+                    initialColor.a * (1f - progress));
+
+                if (progress >= 1f)
+                    break;
+
+                yield return null;
+            }
+
+            if (generation == _ringGeneration)
+                StopRing();
+        }
+
         private void StopRing()
         {
             _ringGeneration++;
+            _ringFading = false;
 
             if (_ringCoroutine != null)
             {

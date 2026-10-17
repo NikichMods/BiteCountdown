@@ -1,5 +1,35 @@
 # Verified Runtime Data
 
+## Bite fade — 1.0.5 candidate
+
+Adopted for a test candidate on 2026-10-17: keep the calibrated main-wait endpoint
+0.22, then continue contraction at the same scale-per-game-second speed while
+linearly fading alpha to zero over 0.15 game seconds. This is a visual finish,
+not a measured correction to native bite timing or synchronization to a clip event.
+
+**READY evidence gate:** the existing `ChangeStatePostfix` observes the resulting
+`WaitingForPulling` state and currently calls `StopRing`; `AnimateRing` separately
+stops on exit from `WaitingForBite`. Both stop paths must be coordinated: stop the
+wait coroutine before starting the fade, retaining one tracked visual coroutine
+and the existing generation token. `ApplyRingVisual` owns the main-wait scale and
+colour; the new fade owns those same renderer fields only after that handoff.
+Speed derives from `(RingStartScale - RingEndScale) / initialWait`, so no second
+gameplay countdown is introduced. The last visual state at the native bite is the
+existing endpoint 0.22/alpha 0.58. Scale is clamped nonnegative during the fade.
+
+Scope: only the mod-owned ring during the first 0.15 seconds of
+`WaitingForPulling`. All other native states, new-wait re-arm, destruction and
+failure call `StopRing`, canceling any tail and invalidating its generation.
+Repeated notifications of the same bite must not restart the fade. The fade uses
+Unity scaled time, matching the native countdown's deltaTime. Native wait/hook
+duration, input, fish data, anchor, pre-bite alpha and lighting remain unchanged.
+
+Verification: clean exact-source Release CI; review both stop paths, single
+coroutine ownership, repeat-state guard and no negative scale. Installed-runtime
+acceptance must judge the fade on normal casts plus immediate cancellation/catch
+and one missed-hook re-arm. No exact clip/audio synchronization is claimed.
+1.0.4 remains the previous immutable candidate; stable baseline is still 1.0.3.
+
 ## Final-size calibration — accepted value, 1.0.4 candidate
 
 User/player feedback reports apparent completion before the native bite: the ring
@@ -44,10 +74,9 @@ transition before the visible bobber dip/sound, estimated by the user as about
 0.1–0.2 seconds. At 0.22 a small gap remains when it disappears, which the user
 perceives as an implicit continuation into the dip. This is accepted for perceived
 timing but still looks abrupt. The delay is not instrumentally measured; a native
-animation/audio trigger has not been identified. No fixed delay or post-wait
-animation is adopted. Preserve the stop boundary in 1.0.4; reconsider this separate
-visual concern if requested, using the native presentation lifecycle rather than
-assuming the user's estimate is a universal constant.
+animation/audio trigger has not been identified. 1.0.4 preserved the stop boundary.
+The subsequently adopted 1.0.5 test above adds a bounded aesthetic fade rather than
+treating the user's estimate as an exact native animation delay.
 
 1.0.4 freezes 0.22 and removes the panel, hotkeys and temporary config binding.
 An existing `[TemporaryCalibration]` config entry is ignored by that candidate.

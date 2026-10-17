@@ -67,14 +67,17 @@ Follow the global host-native-first gate.
 - once per native wait, sample final `RenderSettings.ambientLight` at end-of-frame and scale RGB by a bounded factor `0.62 -> 1.00` based on ambient grayscale;
 - brightness adaptation must have no direct dependency on Keeper's Lantern or any other lighting mod.
 
-## 1.0.4 candidate
+## Current candidate — 1.0.5
 
 User accepted the 0.4.0 live calibration result on 2026-10-17:
 `EndSizeStep=11`, final ring scale `0.22`. Freeze that endpoint and remove all
-temporary calibration UI, keys and config binding. Preserve the native state-exit
-stop boundary, timing, anchor, opacity and lighting. The user's observed gap
-between ring disappearance and bobber dip/audio is a separate open visual concern;
-no extra delay has been adopted. Stable baseline above remains 1.0.3 until promotion.
+temporary calibration UI, keys and config binding (implemented in 1.0.4).
+For the next test the user adopted a 0.15-second visual tail at native bite entry:
+continue shrinking at the same speed and linearly fade alpha to zero. Preserve
+native gameplay timing, anchor, pre-bite opacity and lighting. Cancel the tail
+immediately on any other fishing state, new wait, destruction or failure; repeated
+bite-state notifications must not restart it. This tail is aesthetic, not verified
+clip/audio synchronization. Stable baseline remains 1.0.3 until promotion.
 
 ## Diagnostics
 
