@@ -1,21 +1,21 @@
-name: Build Bite Countdown 1.0.5
+name: Build Bite Countdown 1.0.6 calibration
 
 on:
   push:
     branches:
-      - dev/1.0.5
+      - dev/1.0.6
     paths:
       - 'src/**'
       - 'BiteCountdown.csproj'
       - 'nuget.config'
-      - '.github/workflows/build-1.0.5.yml'
+      - '.github/workflows/build-1.0.6.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: bite-countdown-1.0.5-${{ github.ref }}
+  group: bite-countdown-1.0.6-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -43,8 +43,8 @@ jobs:
           assert re.search(r'PluginVersion = "([^"]+)"', plugin).group(1) == version
           assert 'RingEndScale = 0.22f;' in plugin
           assert 'BiteFadeDuration = 0.15f;' in plugin
-          for temporary in ('TemporaryCalibration', 'KeyCode.F3', 'KeyCode.F4', 'KeyCode.F5', 'ConfigEntry', 'OnGUI', 'private void Update()'):
-              assert temporary not in plugin, temporary
+          for calibration in ('TemporaryCalibration', 'KeyCode.F3', 'KeyCode.F4', 'KeyCode.F5', 'KeyCode.F6', 'KeyCode.F7', 'FadeDurationStep = 0.05f;'):
+              assert calibration in plugin, calibration
           with open(os.environ['GITHUB_ENV'], 'a') as env:
               env.write('CANDIDATE_VERSION=' + version + '\n')
           PY
@@ -75,7 +75,7 @@ jobs:
             echo "Source SHA: $GITHUB_SHA"
             echo "SHA-256: $sha256"
             echo 'Target: Graveyard Keeper 1.407'
-            echo 'Candidate: final ring scale 0.22; 0.15-second continuing contraction and fade after bite'
+            echo 'Calibration candidate: F3 panel; F4/F5 final size; F6/F7 fade in 0.05-second steps'
           } > artifacts/BUILD_INFO.txt
 
       - name: Upload immutable candidate

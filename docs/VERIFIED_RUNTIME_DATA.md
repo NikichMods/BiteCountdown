@@ -1,5 +1,31 @@
 # Verified Runtime Data
 
+## Combined live calibration — 1.0.6 test candidate
+
+The user reports the early-completion feeling returned with the 1.0.5 fade and
+requests retuning final size together with fade duration. 0.22 / 0.15 s therefore
+remain starting values, not acceptance of the combined motion.
+
+Adopted controls: F3 toggles a read-only panel; while open F4/F5 change end scale
+by 0.02 in 0.08–0.60, F6/F7 change fade duration by 0.05 game seconds in 0–0.50.
+Defaults are size step 11 (0.22), fade step 3 (0.15 s). Both bounded integer steps
+persist in BepInEx config under TemporaryCalibration. No mouse/game input is used.
+
+**READY evidence gate:** reuse the previously exercised 0.4.0 keyboard/IMGUI
+calibration pattern and the 1.0.5 visual coroutine owner. Main-wait
+`ApplyRingVisual` reads the live endpoint. Store the native initial wait rather
+than a stale shrink speed, then snapshot endpoint, matching shrink speed and fade
+duration at native bite entry. These snapshots own the fade's last renderer writes;
+edits during the tail apply to the next bite. Zero duration calls `StopRing` before
+coroutine creation/division. Nonzero fade, cancellation, repeated-state guard,
+generation invalidation, anchor/lighting and gameplay isolation remain unchanged.
+No new game hook or native state/timer write is needed.
+
+Verification: clean exact-source CI; review zero/max duration, endpoint bounds,
+snapshot consistency and cleanup paths. Runtime tuning must establish the final
+pair of values. After acceptance remove both config bindings, UI and key polling,
+then freeze the accepted constants. This candidate is not stable publication.
+
 ## Bite fade — 1.0.5 candidate
 
 Adopted for a test candidate on 2026-10-17: keep the calibrated main-wait endpoint

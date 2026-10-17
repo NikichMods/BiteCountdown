@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using BepInEx;
+using BepInEx.Configuration;
 using HarmonyLib;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace BiteCountdown
     {
         public const string PluginGuid = "nikich.bitecountdown";
         public const string PluginName = "Bite Countdown";
-        public const string PluginVersion = "1.0.5";
+        public const string PluginVersion = "1.0.6";
 
         private const BindingFlags AllInstance =
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -25,6 +26,11 @@ namespace BiteCountdown
         private const float RingStartScale = 1.55f;
         private const float RingEndScale = 0.22f;
         private const float BiteFadeDuration = 0.15f;
+        private const float EndScaleStep = 0.02f;
+        private const int MinimumEndScaleStep = 4;
+        private const int MaximumEndScaleStep = 30;
+        private const float FadeDurationStep = 0.05f;
+        private const int MaximumFadeDurationStep = 10;
         private const int SpriteOffsetXPixels = -2;
         private const int SpriteOffsetYPixels = -2;
         private const float RingColorR = 0.60f;
@@ -46,11 +52,15 @@ namespace BiteCountdown
         private Sprite _ringSprite;
         private Texture2D _ringTexture;
         private Coroutine _ringCoroutine;
-        private float _ringShrinkSpeed;
+        private float _ringInitialWait;
         private bool _ringFading;
         private int _ringGeneration;
         private float _ambientColorFactor = 1f;
         private bool _runtimeFailed;
+        private ConfigEntry<int> _endSizeStep;
+        private ConfigEntry<int> _fadeDurationStep;
+        private bool _showCalibration;
+        private GUIStyle _calibrationTextStyle;
 
         private void Awake()
         {
@@ -58,6 +68,17 @@ namespace BiteCountdown
 
             try
             {
+                _endSizeStep = Config.Bind(
+                    "TemporaryCalibration", "EndSizeStep", 11,
+                    new ConfigDescription(
+                        "Final ring size = step * 0.02. Open F3, adjust with F4/F5.",
+                        new AcceptableValueRange<int>(MinimumEndScaleStep, MaximumEndScaleStep)));
+                _fadeDurationStep = Config.Bind(
+                    "TemporaryCalibration", "FadeDurationStep", 3,
+                    new ConfigDescription(
+                        "Bite fade seconds = step * 0.05. Open F3, adjust with F6/F7. Zero disables the tail.",
+                        new AcceptableValueRange<int>(0, MaximumFadeDurationStep)));
+
                 _fishingGuiType = AccessTools.TypeByName("FishingGUI");
                 if (_fishingGuiType == null)
                     throw new InvalidOperationException("FishingGUI type was not found.");
@@ -86,6 +107,75 @@ namespace BiteCountdown
             {
                 Fail("initialization", ex);
             }
+        }
+
+        private void Update()
+        {
+            if (_runtimeFailed || _endSizeStep == null || _fadeDurationStep == null)
+                return;
+
+            if (Input.GetKeyDown(KeyCode.F3))
+                _showCalibration = !_showCalibration;
+
+            if (!_showCalibration)
+                return;
+
+            var sizeAdjustment = (Input.GetKeyDown(KeyCode.F5) ? 1 : 0)
+                - (Input.GetKeyDown(KeyCode.F4) ? 1 : 0);
+            var fadeAdjustment = (Input.GetKeyDown(KeyCode.F7) ? 1 : 0)
+                - (Input.GetKeyDown(KeyCode.F6) ? 1 : 0);
+            if (sizeAdjustment != 0)
+            {
+                _endSizeStep.Value = Mathf.Clamp(_endSizeStep.Value + sizeAdjustment,
+                    MinimumEndScaleStep, MaximumEndScaleStep);
+            }
+            if (fadeAdjustment != 0)
+            {
+                _fadeDurationStep.Value = Mathf.Clamp(_fadeDurationStep.Value + fadeAdjustment,
+                    0, MaximumFadeDurationStep);
+            }
+        }
+
+        private void OnGUI()
+        {
+            if (!_showCalibration || _runtimeFailed || _endSizeStep == null || _fadeDurationStep == null)
+                return;
+
+            if (_calibrationTextStyle == null)
+            {
+                _calibrationTextStyle = new GUIStyle(GUI.skin.label) { fontSize = 16, wordWrap = true };
+                _calibrationTextStyle.normal.textColor = Color.white;
+            }
+
+            GUI.Box(new Rect(16f, 16f, 480f, 218f), GUIContent.none);
+            GUI.Label(new Rect(30f, 26f, 452f, 198f),
+                "Bite Countdown " + PluginVersion + " — калибровка\n"
+                    + "Конечный размер: " + FormatSetting(GetEndScale()) + " (шаг 0.02)\n"
+                    + "F4 — меньше    F5 — больше\n"
+                    + "Затухание: " + FormatSetting(GetFadeDuration()) + " с (шаг 0.05 с)\n"
+                    + "F6 — короче    F7 — дольше\n"
+                    + "F3 — скрыть / показать. Значения сохраняются.\n"
+                    + "Размер: 0.08–0.60. Затухание: 0–0.50 с.\n"
+                    + "0 с — мгновенное исчезновение.\n"
+                    + "Затухание фиксируется при начале поклёвки.",
+                _calibrationTextStyle);
+        }
+
+        private static string FormatSetting(float value)
+        {
+            return value.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        private float GetEndScale()
+        {
+            return _endSizeStep == null ? RingEndScale
+                : Mathf.Clamp(_endSizeStep.Value, MinimumEndScaleStep, MaximumEndScaleStep) * EndScaleStep;
+        }
+
+        private float GetFadeDuration()
+        {
+            return _fadeDurationStep == null ? BiteFadeDuration
+                : Mathf.Clamp(_fadeDurationStep.Value, 0, MaximumFadeDurationStep) * FadeDurationStep;
         }
 
         private void OnDestroy()
@@ -290,7 +380,7 @@ namespace BiteCountdown
 
             StartCoroutine(CaptureAmbientColorFactor(generation));
 
-            _ringShrinkSpeed = (RingStartScale - RingEndScale) / initialWait;
+            _ringInitialWait = initialWait;
             _ringCoroutine = StartCoroutine(
                 AnimateRing(fishingGui, initialWait, generation));
         }
@@ -352,7 +442,7 @@ namespace BiteCountdown
                 return;
 
             var scale = Mathf.Lerp(
-                RingEndScale,
+                GetEndScale(),
                 RingStartScale,
                 Mathf.Clamp01(remainingRatio));
 
@@ -385,16 +475,26 @@ namespace BiteCountdown
                 return;
             }
 
+            var duration = GetFadeDuration();
+            if (duration <= 0f)
+            {
+                StopRing();
+                return;
+            }
+
             // Transfer sole visual ownership before the wait coroutine can
             // observe the state exit and hide the ring.
             StopCoroutine(_ringCoroutine);
             _ringFading = true;
             ApplyRingVisual(0f);
+            var endScale = GetEndScale();
+            var shrinkSpeed = (RingStartScale - endScale) / _ringInitialWait;
             _ringCoroutine = StartCoroutine(
-                FadeRingAfterBite(fishingGui, _ringGeneration));
+                FadeRingAfterBite(fishingGui, _ringGeneration, endScale, shrinkSpeed, duration));
         }
 
-        private IEnumerator FadeRingAfterBite(object fishingGui, int generation)
+        private IEnumerator FadeRingAfterBite(
+            object fishingGui, int generation, float endScale, float shrinkSpeed, float duration)
         {
             var initialColor = _ringRenderer.color;
             var startedAt = Time.time;
@@ -406,8 +506,8 @@ namespace BiteCountdown
                 && _ringRenderer != null)
             {
                 var elapsed = Mathf.Max(0f, Time.time - startedAt);
-                var progress = Mathf.Clamp01(elapsed / BiteFadeDuration);
-                var scale = Mathf.Max(0f, RingEndScale - _ringShrinkSpeed * elapsed);
+                var progress = Mathf.Clamp01(elapsed / duration);
+                var scale = Mathf.Max(0f, endScale - shrinkSpeed * elapsed);
                 _ringObject.transform.localScale = new Vector3(scale, scale, 1f);
                 _ringRenderer.color = new Color(
                     initialColor.r,

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.6 — calibration candidate
+
+- Restored temporary F3 calibration: F4/F5 adjust final size, F6/F7 adjust fade duration in 0.05-second steps.
+- Starts at 0.22 / 0.15 seconds and saves both values between launches.
+- Supports zero fade for immediate disappearance; snapshots fade parameters at each bite.
+
 ## 1.0.5 — candidate
 
 - Continues ring contraction at the same speed while fading out over 0.15 seconds after the native bite begins.

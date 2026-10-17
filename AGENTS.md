@@ -67,7 +67,7 @@ Follow the global host-native-first gate.
 - once per native wait, sample final `RenderSettings.ambientLight` at end-of-frame and scale RGB by a bounded factor `0.62 -> 1.00` based on ambient grayscale;
 - brightness adaptation must have no direct dependency on Keeper's Lantern or any other lighting mod.
 
-## Current candidate — 1.0.5
+## Current test candidate — 1.0.6
 
 User accepted the 0.4.0 live calibration result on 2026-10-17:
 `EndSizeStep=11`, final ring scale `0.22`. Freeze that endpoint and remove all
@@ -78,6 +78,14 @@ native gameplay timing, anchor, pre-bite opacity and lighting. Cancel the tail
 immediately on any other fishing state, new wait, destruction or failure; repeated
 bite-state notifications must not restart it. This tail is aesthetic, not verified
 clip/audio synchronization. Stable baseline remains 1.0.3 until promotion.
+
+The combined endpoint/fade feeling needs retuning after user feedback on 1.0.5.
+1.0.6 temporarily restores F3 calibration: F4/F5 adjust size by 0.02 (0.08–0.60),
+F6/F7 adjust fade by 0.05 s (0–0.50 s). Defaults 0.22 / 0.15 s; save both settings
+in BepInEx config. The main-wait endpoint updates live; the tail snapshots its
+parameters at bite entry. Zero duration stops instantly. Remove this temporary UI,
+key polling and bindings after the user accepts a final pair; no stable promotion
+or new default is inferred from earlier size-only acceptance.
 
 ## Diagnostics
 
