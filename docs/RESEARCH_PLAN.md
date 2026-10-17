@@ -24,6 +24,6 @@ Verified:
 - missed-hook re-arm: postfix on `FishingGUI.ChangeState` when the resulting state is `WaitingForBite` and `can_take_out == true`;
 - visual progress: session-local coroutine reading the existing native `_waiting_for_bite_delay`;
 - visual anchor: current bobber sprite tight-mesh center plus accepted pixel offset;
-- stop: any native transition out of `WaitingForBite`.
+- current 1.0.5 candidate visual finish: on native `WaitingForPulling`, continue contraction at the same speed and fade alpha over 0.15 game seconds; any other state, cancellation, new wait or failure stops the ring immediately. Stable 1.0.3 and the earlier 1.0.4 candidate stopped at bite entry.
 
 Production does not write fishing state, wait values, catch data, bait data, energy, achievements, or save data.
