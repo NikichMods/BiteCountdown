@@ -1,21 +1,21 @@
-name: Build final-size calibration
+name: Build Bite Countdown 1.0.4
 
 on:
   push:
     branches:
-      - research/ring-end-size
+      - dev/1.0.4
     paths:
       - 'src/**'
       - 'BiteCountdown.csproj'
       - 'nuget.config'
-      - '.github/workflows/build-calibration.yml'
+      - '.github/workflows/build-1.0.4.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: bite-countdown-calibration-${{ github.ref }}
+  group: bite-countdown-1.0.4-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -41,6 +41,9 @@ jobs:
           assert project.findtext('.//FileVersion') == version + '.0'
           plugin = Path('src/Plugin.cs').read_text(encoding='utf-8')
           assert re.search(r'PluginVersion = "([^"]+)"', plugin).group(1) == version
+          assert 'RingEndScale = 0.22f;' in plugin
+          for temporary in ('TemporaryCalibration', 'KeyCode.F3', 'KeyCode.F4', 'KeyCode.F5', 'ConfigEntry', 'OnGUI', 'private void Update()'):
+              assert temporary not in plugin, temporary
           with open(os.environ['GITHUB_ENV'], 'a') as env:
               env.write('CANDIDATE_VERSION=' + version + '\n')
           PY
@@ -58,7 +61,7 @@ jobs:
           dotnet restore BiteCountdown.csproj --configfile nuget.config
           dotnet build BiteCountdown.csproj -c Release --no-restore --nologo
 
-      - name: Stage research candidate
+      - name: Stage candidate
         shell: bash
         run: |
           set -euo pipefail
@@ -71,10 +74,10 @@ jobs:
             echo "Source SHA: $GITHUB_SHA"
             echo "SHA-256: $sha256"
             echo 'Target: Graveyard Keeper 1.407'
-            echo 'Research only: F3 panel, F4/F5 final ring size calibration'
+            echo 'Candidate: final ring scale 0.22; temporary calibration removed'
           } > artifacts/BUILD_INFO.txt
 
-      - name: Upload immutable research candidate
+      - name: Upload immutable candidate
         uses: actions/upload-artifact@v4
         with:
           name: BiteCountdown-${{ env.CANDIDATE_VERSION }}-${{ github.sha }}

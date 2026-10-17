@@ -1,6 +1,6 @@
 # Verified Runtime Data
 
-## Temporary final-size calibration — 0.4.0 research
+## Final-size calibration — accepted value, 1.0.4 candidate
 
 User/player feedback reports apparent completion before the native bite: the ring
 reaches the visible bobber before reaching its very small accepted final scale.
@@ -24,9 +24,34 @@ Research controls: F3 shows/hides the panel; while visible F4 decreases and F5
 increases final scale by 0.02. Range is 0.08–0.60, initial value 0.08. The bounded
 BepInEx config entry persists the value between launches; the panel shows the
 resulting scale. No mouse controls, time changes or game-save writes are added.
-The final value is not accepted yet. After user calibration, freeze the chosen
-scale and remove the panel, hotkeys and temporary config binding before stable
-promotion. Stable accepted baseline remains 1.0.3.
+On 2026-10-17 the user accepted the perceived timing at the saved setting
+`EndSizeStep = 11`, corresponding to scale **0.22**, and requested freezing that
+value and removing calibration. The local loader log confirms 0.4.0 was loaded;
+the installed DLL digest matches the immutable 0.4.0 candidate record.
+
+**READY for 1.0.4:** replace only the stable renderer's final scale constant with
+0.22 and remove the research-only ConfigEntry, F3/F4/F5, Update and OnGUI code.
+`ApplyRingVisual` still owns the last write to localScale; initialization and the
+native-wait coroutine remain its only callers. Native state, stop/re-arm, anchor,
+initial size, alpha and lighting remain identical to 1.0.3. Verify the complete
+runtime-source diff against 1.0.3 contains only endpoint and version changes,
+then clean-build the exact candidate and check artifact identity. The user's
+0.4.0 endpoint acceptance supports the selected value; loading the replacement
+binary and absence of the temporary panel are not yet runtime-verified.
+
+Known visual limitation, user-observed: the ring disappears on the native state
+transition before the visible bobber dip/sound, estimated by the user as about
+0.1–0.2 seconds. At 0.22 a small gap remains when it disappears, which the user
+perceives as an implicit continuation into the dip. This is accepted for perceived
+timing but still looks abrupt. The delay is not instrumentally measured; a native
+animation/audio trigger has not been identified. No fixed delay or post-wait
+animation is adopted. Preserve the stop boundary in 1.0.4; reconsider this separate
+visual concern if requested, using the native presentation lifecycle rather than
+assuming the user's estimate is a universal constant.
+
+1.0.4 freezes 0.22 and removes the panel, hotkeys and temporary config binding.
+An existing `[TemporaryCalibration]` config entry is ignored by that candidate.
+Stable accepted baseline remains 1.0.3 pending candidate acceptance/promotion.
 
 Target: **Graveyard Keeper 1.407**.
 

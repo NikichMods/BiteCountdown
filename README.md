@@ -4,7 +4,7 @@ A small visual quality-of-life mod for **Graveyard Keeper 1.407**.
 
 **Bite Countdown adds a subtle shrinking ring around the bobber so you can see when the next bite is coming.**
 
-The ring follows the game's real waiting time and reaches the bobber at the native bite moment.
+The ring contracts around the bobber during the game's real waiting time and disappears when the native bite phase begins.
 
 ## What it changes
 

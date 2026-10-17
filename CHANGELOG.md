@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.4 — candidate
+
+- Increased final ring scale to the player-calibrated 0.22 so the visible contraction better matches the perceived bite timing.
+- Removed temporary F3/F4/F5 calibration controls and configuration binding.
+- Preserved native bite timing, ring disappearance, alignment, opacity and ambient brightness.
+
 ## 1.0.3
 
 - Fixed horizontal countdown-ring alignment when fishing to the left.

@@ -67,6 +67,15 @@ Follow the global host-native-first gate.
 - once per native wait, sample final `RenderSettings.ambientLight` at end-of-frame and scale RGB by a bounded factor `0.62 -> 1.00` based on ambient grayscale;
 - brightness adaptation must have no direct dependency on Keeper's Lantern or any other lighting mod.
 
+## 1.0.4 candidate
+
+User accepted the 0.4.0 live calibration result on 2026-10-17:
+`EndSizeStep=11`, final ring scale `0.22`. Freeze that endpoint and remove all
+temporary calibration UI, keys and config binding. Preserve the native state-exit
+stop boundary, timing, anchor, opacity and lighting. The user's observed gap
+between ring disappearance and bobber dip/audio is a separate open visual concern;
+no extra delay has been adopted. Stable baseline above remains 1.0.3 until promotion.
+
 ## Diagnostics
 
 Stable releases must not create a separate diagnostic log file. Production may emit one normal BepInEx error only when a fatal compatibility/runtime failure disables the countdown.
