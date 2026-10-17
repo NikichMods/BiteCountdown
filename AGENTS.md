@@ -55,7 +55,7 @@ Follow the global host-native-first gate.
 - No permanent Harmony `Update()` patch, broad polling, or parallel fishing state machine.
 - Unsupported runtime states fail closed by disabling only the countdown.
 
-## Accepted visual behavior
+## Stable 1.0.3 visual behavior
 
 - start scale: `1.55`;
 - end scale: `0.08`;
@@ -67,25 +67,17 @@ Follow the global host-native-first gate.
 - once per native wait, sample final `RenderSettings.ambientLight` at end-of-frame and scale RGB by a bounded factor `0.62 -> 1.00` based on ambient grayscale;
 - brightness adaptation must have no direct dependency on Keeper's Lantern or any other lighting mod.
 
-## Current test candidate — 1.0.6
+## Current candidate — 1.0.7
 
-User accepted the 0.4.0 live calibration result on 2026-10-17:
-`EndSizeStep=11`, final ring scale `0.22`. Freeze that endpoint and remove all
-temporary calibration UI, keys and config binding (implemented in 1.0.4).
-For the next test the user adopted a 0.15-second visual tail at native bite entry:
-continue shrinking at the same speed and linearly fade alpha to zero. Preserve
-native gameplay timing, anchor, pre-bite opacity and lighting. Cancel the tail
-immediately on any other fishing state, new wait, destruction or failure; repeated
-bite-state notifications must not restart it. This tail is aesthetic, not verified
-clip/audio synchronization. Stable baseline remains 1.0.3 until promotion.
-
-The combined endpoint/fade feeling needs retuning after user feedback on 1.0.5.
-1.0.6 temporarily restores F3 calibration: F4/F5 adjust size by 0.02 (0.08–0.60),
-F6/F7 adjust fade by 0.05 s (0–0.50 s). Defaults 0.22 / 0.15 s; save both settings
-in BepInEx config. The main-wait endpoint updates live; the tail snapshots its
-parameters at bite entry. Zero duration stops instantly. Remove this temporary UI,
-key polling and bindings after the user accepts a final pair; no stable promotion
-or new default is inferred from earlier size-only acceptance.
+On 2026-10-17 the user accepted the combined 1.0.6 calibration result:
+`EndSizeStep=13`, `FadeDurationStep=8`: final scale **0.26**, fade **0.40 s**.
+1.0.7 freezes this pair and removes F3–F7, IMGUI, input polling and temporary
+config bindings. Preserve 1.0.6's main contraction, same-speed visual continuation,
+linear alpha fade, bite-entry snapshot and immediate cleanup on catch/cancel/new
+wait/destruction/failure. Native gameplay timing, anchor, pre-bite opacity and
+lighting remain unchanged. No clip/audio synchronization is claimed. The pair is
+user-accepted; replacement-binary runtime verification and stable promotion remain
+separate. Stable release baseline remains 1.0.3 until promotion.
 
 ## Diagnostics
 

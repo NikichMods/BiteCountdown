@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.7 — candidate
+
+- Froze the user-calibrated endpoint at 0.26 and fade duration at 0.40 seconds.
+- Removed the temporary F3–F7 controls, panel and configuration bindings.
+- Preserved the tested contraction/fade algorithm and native fishing mechanics.
+
 ## 1.0.6 — calibration candidate
 
 - Restored temporary F3 calibration: F4/F5 adjust final size, F6/F7 adjust fade duration in 0.05-second steps.

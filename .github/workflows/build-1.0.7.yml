@@ -1,21 +1,21 @@
-name: Build Bite Countdown 1.0.6 calibration
+name: Build Bite Countdown 1.0.7
 
 on:
   push:
     branches:
-      - dev/1.0.6
+      - dev/1.0.7
     paths:
       - 'src/**'
       - 'BiteCountdown.csproj'
       - 'nuget.config'
-      - '.github/workflows/build-1.0.6.yml'
+      - '.github/workflows/build-1.0.7.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: bite-countdown-1.0.6-${{ github.ref }}
+  group: bite-countdown-1.0.7-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -41,10 +41,10 @@ jobs:
           assert project.findtext('.//FileVersion') == version + '.0'
           plugin = Path('src/Plugin.cs').read_text(encoding='utf-8')
           assert re.search(r'PluginVersion = "([^"]+)"', plugin).group(1) == version
-          assert 'RingEndScale = 0.22f;' in plugin
-          assert 'BiteFadeDuration = 0.15f;' in plugin
-          for calibration in ('TemporaryCalibration', 'KeyCode.F3', 'KeyCode.F4', 'KeyCode.F5', 'KeyCode.F6', 'KeyCode.F7', 'FadeDurationStep = 0.05f;'):
-              assert calibration in plugin, calibration
+          assert 'RingEndScale = 0.26f;' in plugin
+          assert 'BiteFadeDuration = 0.40f;' in plugin
+          for calibration in ('TemporaryCalibration', 'KeyCode.F3', 'KeyCode.F4', 'KeyCode.F5', 'KeyCode.F6', 'KeyCode.F7', 'ConfigEntry', 'OnGUI', 'private void Update()'):
+              assert calibration not in plugin, calibration
           with open(os.environ['GITHUB_ENV'], 'a') as env:
               env.write('CANDIDATE_VERSION=' + version + '\n')
           PY
@@ -75,7 +75,7 @@ jobs:
             echo "Source SHA: $GITHUB_SHA"
             echo "SHA-256: $sha256"
             echo 'Target: Graveyard Keeper 1.407'
-            echo 'Calibration candidate: F3 panel; F4/F5 final size; F6/F7 fade in 0.05-second steps'
+            echo 'Candidate: frozen endpoint 0.26 / fade 0.40 seconds; no calibration'
           } > artifacts/BUILD_INFO.txt
 
       - name: Upload immutable candidate

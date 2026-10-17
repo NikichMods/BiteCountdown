@@ -1,10 +1,34 @@
 # Verified Runtime Data
 
+## Frozen combined calibration — 1.0.7 candidate
+
+On 2026-10-17 the user confirmed the combined motion now feels correct and asked
+to freeze the saved values and remove calibration. Config from the exercised
+1.0.6 build contains `EndSizeStep=13` and `FadeDurationStep=8`: endpoint **0.26**,
+fade **0.40 game seconds**. The loader log identifies 1.0.6 and its installed DLL
+digest matches that immutable candidate. This supersedes the earlier size-only
+0.22 acceptance as the current adopted endpoint/fade pair.
+
+**READY evidence gate:** replace live config accessors in `ApplyRingVisual` and
+`BeginBiteFade` with the accepted constants, then remove the calibration-only
+ConfigEntry fields/bindings, input polling, IMGUI panel and formatting helpers.
+Keep 1.0.6's same fade coroutine, initial-wait storage, bite-entry parameter
+snapshot and last renderer writes. No lifecycle/stop, gameplay timer/input,
+anchor, initial scale, pre-bite alpha or ambient-light change is included.
+Source review plus exact-source clean Release CI and installed hash/version
+verification are required. The chosen pair is user-accepted; the replacement
+binary's loading and removal of the panel still need a normal runtime check.
+
+1.0.7 hardcodes 0.26 / 0.40 s. Back up and remove the dedicated config containing
+only TemporaryCalibration during installation. No stable promotion is implied by
+building/installing this candidate; stable release baseline remains 1.0.3.
+
 ## Combined live calibration — 1.0.6 test candidate
 
 The user reports the early-completion feeling returned with the 1.0.5 fade and
-requests retuning final size together with fade duration. 0.22 / 0.15 s therefore
-remain starting values, not acceptance of the combined motion.
+requests retuning final size together with fade duration. 0.22 / 0.15 s were the
+starting values, not acceptance of the combined motion. The resulting acceptance
+and final 0.26 / 0.40 s pair are recorded above.
 
 Adopted controls: F3 toggles a read-only panel; while open F4/F5 change end scale
 by 0.02 in 0.08–0.60, F6/F7 change fade duration by 0.05 game seconds in 0–0.50.
