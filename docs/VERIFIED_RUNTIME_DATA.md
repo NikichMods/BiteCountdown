@@ -12,6 +12,9 @@ ordinary fatal-disable diagnostic and has no per-frame or separate-file logging.
 - clean Release CI: `39026965766`, artifact `12098613942`;
 - DLL: `BiteCountdown.dll`, assembly/file version `1.0.7.0`;
 - SHA-256: `a2021039c48e629824c4cbb50088e1ccff39ced7d32e8d3b19f9bf52f930c8b9`;
+- stable publication CI: `39058046204`, completed successfully;
+- GitHub Release: [v1.0.7](https://github.com/NikichMods/BiteCountdown/releases/tag/v1.0.7), ID `415986802`;
+- published DLL asset ID `651237983` digest matches the accepted SHA-256 exactly;
 - main-wait endpoint **0.26**, then same-speed contraction and linear alpha fade
   over **0.40 game seconds** at native bite entry;
 - no F3–F7 controls, IMGUI, key polling or calibration config binding;
