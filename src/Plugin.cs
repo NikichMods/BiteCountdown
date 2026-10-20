@@ -13,7 +13,7 @@ namespace BiteCountdown
     {
         public const string PluginGuid = "nikich.bitecountdown";
         public const string PluginName = "Bite Countdown";
-        public const string PluginVersion = "1.0.7";
+        public const string PluginVersion = "1.0.8";
 
         private const BindingFlags AllInstance =
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -25,6 +25,7 @@ namespace BiteCountdown
         private const float RingStartScale = 1.55f;
         private const float RingEndScale = 0.26f;
         private const float BiteFadeDuration = 0.40f;
+        private const float RingWaitAlpha = 0.25f;
         private const int SpriteOffsetXPixels = -2;
         private const int SpriteOffsetYPixels = -2;
         private const float RingColorR = 0.60f;
@@ -359,16 +360,11 @@ namespace BiteCountdown
             _ringObject.transform.localScale =
                 new Vector3(scale, scale, 1f);
 
-            var alpha = Mathf.Lerp(
-                0.58f,
-                0.34f,
-                Mathf.Clamp01(remainingRatio));
-
             _ringRenderer.color = new Color(
                 RingColorR * _ambientColorFactor,
                 RingColorG * _ambientColorFactor,
                 RingColorB * _ambientColorFactor,
-                alpha);
+                RingWaitAlpha);
         }
 
         private void BeginBiteFade(object fishingGui)
@@ -484,7 +480,7 @@ namespace BiteCountdown
 
                 _ringRenderer.sprite = _ringSprite;
                 _ringRenderer.color =
-                    new Color(RingColorR, RingColorG, RingColorB, 0.34f);
+                    new Color(RingColorR, RingColorG, RingColorB, RingWaitAlpha);
                 _ringObject.SetActive(false);
             }
 

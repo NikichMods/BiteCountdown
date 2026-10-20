@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.8 — candidate
+
+- Uses a constant 25% opacity throughout the bite wait.
+- Preserves final size and the 0.40-second post-bite contraction/fade, starting from the new opacity.
+
 ## 1.0.7 — 2026-10-17
 
 - Froze the user-calibrated endpoint at 0.26 and fade duration at 0.40 seconds.

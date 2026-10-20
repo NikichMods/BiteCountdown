@@ -81,6 +81,14 @@ the user runtime-tested the exact 1.0.7 DLL and explicitly accepted stable relea
 Frozen runtime source: `2f513ebc9b527910645db4535372c7a4269142b5` / `v1.0.7`.
 Publish the exact accepted DLL; never substitute a later rebuild under this version.
 
+## 1.0.8 candidate
+
+User requested constant pre-bite alpha **0.25** on 2026-10-21. Replace the wait
+opacity ramp only; retain endpoint 0.26, RGB/ambient behaviour and 0.40-second
+post-bite contraction/fade. The existing fade starts from 0.25 and goes to zero;
+do not add an opacity jump at bite entry. Stable baseline remains 1.0.7 until
+candidate runtime acceptance and promotion.
+
 ## Diagnostics
 
 Stable releases must not create a separate diagnostic log file. Production may emit one normal BepInEx error only when a fatal compatibility/runtime failure disables the countdown.

@@ -1,5 +1,21 @@
 # Verified Runtime Data
 
+## 1.0.8 candidate — constant pre-bite alpha
+
+Adopted 2026-10-21: set the ring's alpha to **0.25 throughout the native wait**,
+replacing the 0.34-to-0.58 ramp. Retain endpoint 0.26 and the same 0.40-second
+continuing-contraction/linear-fade algorithm after bite entry. That fade naturally
+starts from the new 0.25 alpha, without a brightness jump to the old 0.58.
+
+**READY:** `ApplyRingVisual` is the last wait-phase colour writer, called by
+initialization, `AnimateRing` and `BeginBiteFade`. `EnsureRingObject` also sets an
+initial colour while inactive; use the same constant there. `FadeRingAfterBite`
+captures the resulting alpha and multiplies by (1-progress), so its code stays
+unchanged. Scope is only ring opacity; scale, RGB/ambient adaptation, native timers,
+lifecycle, cancellation and save isolation are preserved. Verify the narrow source
+diff and clean exact-source CI, then judge readability in a normal installed cast.
+Stable remains 1.0.7 pending acceptance of this candidate.
+
 ## Current stable runtime — 1.0.7
 
 Accepted 2026-10-17: the user tested the exact replacement DLL without calibration,
