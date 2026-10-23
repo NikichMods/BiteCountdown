@@ -1,6 +1,8 @@
-# ChatGPT Project Instructions — Bite Countdown
+# ChatGPT Project Instructions — Fishing Bite Countdown
 
-We are working on **Bite Countdown**.
+We are working on **Fishing Bite Countdown**.
+
+Public name: **Fishing Bite Countdown** (formerly **Bite Countdown**). The repository slug, GUID and `BiteCountdown.dll` remain unchanged. The accepted 1.0.7 binary still reports the former name; do not rebuild it for this rename.
 
 Repository: `NikichMods/BiteCountdown`  
 Target/runtime: **Graveyard Keeper 1.407**, BepInEx/Harmony
@@ -40,7 +42,7 @@ Do not guess Graveyard Keeper APIs, IDs, lifecycle, formulas, ownership, final w
 
 Keep durable facts in the correct canonical source:
 - reusable Graveyard Keeper host/runtime facts -> `NikichMods/GraveyardKeeperResearch`;
-- Bite Countdown product behavior, visual decisions, acceptance state, build identity, and release evidence -> `NikichMods/BiteCountdown`.
+- Fishing Bite Countdown product behavior, visual decisions, acceptance state, build identity, and release evidence -> `NikichMods/BiteCountdown`.
 
 Project Instructions are only the persistent bootstrap layer; do not treat them as mutable project state.
 

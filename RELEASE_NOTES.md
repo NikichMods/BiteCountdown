@@ -1,4 +1,4 @@
-# Bite Countdown 1.0.7
+# Fishing Bite Countdown 1.0.7
 
 Makes the end of the countdown feel smoother and better aligned with the visible bite.
 

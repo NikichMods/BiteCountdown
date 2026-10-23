@@ -1,5 +1,10 @@
 # Changelog
 
+## Public-name update — 2026-10-23
+
+- Renamed the mod from **Bite Countdown** to **Fishing Bite Countdown** so its fishing scope is clear in search results.
+- Updated public documentation and release metadata; the accepted 1.0.7 binary, version, GUID, installed DLL and fishing behavior are unchanged.
+
 ## 1.0.7 — 2026-10-17
 
 - Froze the user-calibrated endpoint at 0.26 and fade duration at 0.40 seconds.

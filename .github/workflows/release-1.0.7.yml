@@ -1,4 +1,4 @@
-name: Publish Bite Countdown 1.0.7
+name: Publish Fishing Bite Countdown 1.0.7
 
 on:
   push:
@@ -43,7 +43,7 @@ jobs:
           assert project.findtext('.//FileVersion') == version + '.0'
           plugin = Path('src/Plugin.cs').read_text(encoding='utf-8')
           assert re.search(r'PluginVersion = "([^"]+)"', plugin).group(1) == version
-          assert Path('RELEASE_NOTES.md').read_text().splitlines()[0] == '# Bite Countdown ' + version
+          assert Path('RELEASE_NOTES.md').read_text().splitlines()[0] == '# Fishing Bite Countdown ' + version
           PY
 
       - name: Verify exact accepted candidate artifact
@@ -92,5 +92,5 @@ jobs:
             release/BiteCountdown.dll \
             release/SHA256SUMS.txt \
             --target "$ACCEPTED_SOURCE_SHA" \
-            --title "Bite Countdown 1.0.7" \
+            --title "Fishing Bite Countdown 1.0.7" \
             --notes-file RELEASE_NOTES.md

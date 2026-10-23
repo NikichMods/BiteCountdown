@@ -1,4 +1,4 @@
-# Bite Countdown — Project Working Contract
+# Fishing Bite Countdown — Project Working Contract
 
 This repository follows the canonical global rules in `NikichMods/DevRules`.
 
@@ -6,7 +6,8 @@ Before substantive technical work, read the current `ENGINEERING_RULES.md`, `CI_
 
 ## Project identity
 
-- Project: **Bite Countdown**
+- Project: **Fishing Bite Countdown**
+- Former public name: **Bite Countdown**; renamed on **2026-10-23** to make the fishing scope explicit and searchable.
 - Repository: `NikichMods/BiteCountdown`
 - Game: **Graveyard Keeper 1**
 - Target version: **1.407**
@@ -14,6 +15,8 @@ Before substantive technical work, read the current `ENGINEERING_RULES.md`, `CI_
 - BepInEx GUID: `nikich.bitecountdown`
 - Stable installed DLL: `BiteCountdown.dll`
 - Current accepted stable runtime baseline: **1.0.7**
+
+The public-name change is documentation/release metadata only. Keep the repository slug, namespace, GUID, assembly name and installed DLL identity stable. The immutable accepted 1.0.7 binary still reports `Bite Countdown` as its BepInEx plugin name and in diagnostics; that is expected and is not a different mod. Do not rebuild or replace that binary merely to update its display name.
 
 Do not reintroduce the earlier rod-balance product concept into runtime or release naming.
 
@@ -24,13 +27,13 @@ Reusable Graveyard Keeper 1.407 host/runtime facts are shared through `NikichMod
 Before starting fresh host-internals research, check:
 - `NikichMods/GraveyardKeeperResearch/docs/RESEARCH_INDEX.md`;
 - the relevant canonical shared document, especially `docs/FISHING_RUNTIME.md` for fishing lifecycle/geometry questions;
-- accepted local project evidence/history if the fact is Bite Countdown-specific.
+- accepted local project evidence/history if the fact is Fishing Bite Countdown-specific.
 
-Keep cross-project host/runtime facts in the shared research repository. Keep Bite Countdown product behavior, visual decisions, acceptance state, build identity, and release evidence in this repository.
+Keep cross-project host/runtime facts in the shared research repository. Keep Fishing Bite Countdown product behavior, visual decisions, acceptance state, build identity, and release evidence in this repository.
 
 ## Product scope
 
-Bite Countdown is a visual-only fishing quality-of-life mod.
+Fishing Bite Countdown is a visual-only fishing quality-of-life mod.
 
 It adds a subtle in-world ring around the bobber during the native bite-wait interval. The ring contracts across the already-resolved vanilla wait, then briefly continues shrinking and fades as the native bite begins.
 

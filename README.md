@@ -1,8 +1,8 @@
-# Bite Countdown
+# Fishing Bite Countdown
 
 A small visual quality-of-life mod for **Graveyard Keeper 1.407**.
 
-**Bite Countdown adds a subtle shrinking ring around the bobber so you can see when the next bite is coming.**
+**Fishing Bite Countdown adds a subtle shrinking ring around the bobber so you can see when the next bite is coming.**
 
 The ring contracts around the bobber during the game's real waiting time, then briefly continues shrinking and fades out as the native bite phase begins.
 
@@ -19,7 +19,7 @@ The ring contracts around the bobber during the game's real waiting time, then b
 - no extra fish;
 - no changes to fish selection, rarity, quality, bait, energy, or the reeling minigame.
 
-The game still owns the fishing result. Bite Countdown only visualizes the waiting phase.
+The game still owns the fishing result. Fishing Bite Countdown only visualizes the waiting phase.
 
 ## Installation
 

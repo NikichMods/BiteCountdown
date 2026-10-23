@@ -1,5 +1,9 @@
 # Verified Runtime Data
 
+## Public name and binary identity
+
+Since 2026-10-23 the public product name is **Fishing Bite Countdown**, formerly **Bite Countdown**. This is a documentation/release-metadata change only. The accepted 1.0.7 DLL, GUID, plugin display name, diagnostics, source tag and hashes below remain unchanged. Historical evidence retains the name used when it was recorded.
+
 ## Current stable runtime — 1.0.7
 
 Accepted 2026-10-17: the user tested the exact replacement DLL without calibration,

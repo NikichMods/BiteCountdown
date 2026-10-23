@@ -4,7 +4,7 @@ Target: **Graveyard Keeper 1.407**.
 
 ## Stable product status
 
-The runtime questions required for Bite Countdown 1.x are closed.
+The runtime questions required for Fishing Bite Countdown 1.x are closed.
 
 Verified:
 
