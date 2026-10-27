@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.8 — 2026-10-27
+
+- Reduced the ring's pre-bite opacity to a constant 25% throughout the native wait, replacing the previous 34%–58% ramp.
+- The post-bite visual fade now begins from 25% opacity. The accepted 0.26 endpoint, 0.40-second contraction/fade, ambient RGB adaptation and native fishing behavior remain unchanged.
+
 ## Public-name update — 2026-10-23
 
 - Renamed the mod from **Bite Countdown** to **Fishing Bite Countdown** so its fishing scope is clear in search results.

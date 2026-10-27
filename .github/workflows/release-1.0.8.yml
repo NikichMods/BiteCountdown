@@ -1,4 +1,4 @@
-name: Publish Fishing Bite Countdown 1.0.7
+name: Publish Fishing Bite Countdown 1.0.8
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - 'BiteCountdown.csproj'
       - 'nuget.config'
       - 'RELEASE_NOTES.md'
-      - '.github/workflows/release-1.0.7.yml'
+      - '.github/workflows/release-1.0.8.yml'
 
 permissions:
   contents: write
@@ -19,8 +19,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env:
-      ACCEPTED_SOURCE_SHA: 2f513ebc9b527910645db4535372c7a4269142b5
-      RELEASE_VERSION: 1.0.7
+      ACCEPTED_SOURCE_SHA: 7ad720c272b5a400eb83cffef80661c78ed8b952
+      RELEASE_VERSION: 1.0.8
 
     steps:
       - name: Checkout stable source and release metadata
@@ -43,6 +43,9 @@ jobs:
           assert project.findtext('.//FileVersion') == version + '.0'
           plugin = Path('src/Plugin.cs').read_text(encoding='utf-8')
           assert re.search(r'PluginVersion = "([^"]+)"', plugin).group(1) == version
+          assert 'RingWaitAlpha = 0.25f;' in plugin
+          assert 'RingEndScale = 0.26f;' in plugin
+          assert 'BiteFadeDuration = 0.40f;' in plugin
           assert Path('RELEASE_NOTES.md').read_text().splitlines()[0] == '# Fishing Bite Countdown ' + version
           PY
 
@@ -53,7 +56,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          artifact_id=12098613942
+          artifact_id=12307089744
           gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/$artifact_id" > artifact.json
           jq -e --arg sha "$ACCEPTED_SOURCE_SHA" --arg name "BiteCountdown-${RELEASE_VERSION}-${ACCEPTED_SOURCE_SHA}" \
             '.expired == false and .workflow_run.head_sha == $sha and .name == $name' artifact.json
@@ -72,25 +75,25 @@ jobs:
           test "$recorded_source" = "$ACCEPTED_SOURCE_SHA"
           test "$(sed -n 's/^Version: //p' release/BUILD_INFO.txt)" = "$RELEASE_VERSION"
           test "$recorded_hash" = "$actual_hash"
-          test "$actual_hash" = "a2021039c48e629824c4cbb50088e1ccff39ced7d32e8d3b19f9bf52f930c8b9"
+          test "$actual_hash" = "b583e92c76082799fa5323545adc737aab098542de8694ac0e2bfcf15a68bc76"
 
           printf '%s  %s\n' "$actual_hash" "BiteCountdown.dll" > release/SHA256SUMS.txt
 
-      - name: Publish immutable 1.0.7 release
+      - name: Publish immutable 1.0.8 release
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
 
-          if gh release view v1.0.7 >/dev/null 2>&1; then
-            echo 'v1.0.7 already exists; refusing to overwrite immutable release.' >&2
+          if gh release view v1.0.8 >/dev/null 2>&1; then
+            echo 'v1.0.8 already exists; refusing to overwrite immutable release.' >&2
             exit 1
           fi
 
-          gh release create v1.0.7 \
+          gh release create v1.0.8 \
             release/BiteCountdown.dll \
             release/SHA256SUMS.txt \
             --target "$ACCEPTED_SOURCE_SHA" \
-            --title "Fishing Bite Countdown 1.0.7" \
+            --title "Fishing Bite Countdown 1.0.8" \
             --notes-file RELEASE_NOTES.md

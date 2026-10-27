@@ -1,21 +1,21 @@
-name: Build Bite Countdown 1.0.7
+name: Build Bite Countdown 1.0.8
 
 on:
   push:
     branches:
-      - dev/1.0.7
+      - dev/1.0.8
     paths:
       - 'src/**'
       - 'BiteCountdown.csproj'
       - 'nuget.config'
-      - '.github/workflows/build-1.0.7.yml'
+      - '.github/workflows/build-1.0.8.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: bite-countdown-1.0.7-${{ github.ref }}
+  group: bite-countdown-1.0.8-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -43,6 +43,7 @@ jobs:
           assert re.search(r'PluginVersion = "([^"]+)"', plugin).group(1) == version
           assert 'RingEndScale = 0.26f;' in plugin
           assert 'BiteFadeDuration = 0.40f;' in plugin
+          assert 'RingWaitAlpha = 0.25f;' in plugin
           for calibration in ('TemporaryCalibration', 'KeyCode.F3', 'KeyCode.F4', 'KeyCode.F5', 'KeyCode.F6', 'KeyCode.F7', 'ConfigEntry', 'OnGUI', 'private void Update()'):
               assert calibration not in plugin, calibration
           with open(os.environ['GITHUB_ENV'], 'a') as env:
@@ -75,7 +76,7 @@ jobs:
             echo "Source SHA: $GITHUB_SHA"
             echo "SHA-256: $sha256"
             echo 'Target: Graveyard Keeper 1.407'
-            echo 'Candidate: frozen endpoint 0.26 / fade 0.40 seconds; no calibration'
+            echo 'Candidate: constant wait alpha 0.25; endpoint 0.26 / fade 0.40 seconds'
           } > artifacts/BUILD_INFO.txt
 
       - name: Upload immutable candidate

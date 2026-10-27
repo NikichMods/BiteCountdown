@@ -2,9 +2,22 @@
 
 ## Public name and binary identity
 
-Since 2026-10-23 the public product name is **Fishing Bite Countdown**, formerly **Bite Countdown**. This is a documentation/release-metadata change only. The accepted 1.0.7 DLL, GUID, plugin display name, diagnostics, source tag and hashes below remain unchanged. Historical evidence retains the name used when it was recorded.
+Since 2026-10-23 the public product name is **Fishing Bite Countdown**, formerly **Bite Countdown**. This is a documentation/release-metadata change only. The GUID, installed DLL and BepInEx plugin display name remain `nikich.bitecountdown`, `BiteCountdown.dll` and `Bite Countdown` in 1.0.8; the public-facing name is Fishing Bite Countdown. Historical 1.0.7 evidence and binary identity remain unchanged.
 
-## Current stable runtime — 1.0.7
+## Current stable runtime — 1.0.8
+
+Accepted by the user on 2026-10-27 after testing the installed 1.0.8 candidate. This release changes only the mod-owned ring's pre-bite opacity, from the rising 0.34–0.58 curve to constant **0.25**. The continuing post-bite contraction and linear fade now start at 0.25 and still last **0.40 game seconds**. The 0.26 scale endpoint, RGB ambient adaptation, anchoring, cancellation/re-arm lifecycle, game-owned fishing mechanics, saves and sparse production logging are unchanged.
+
+- exact accepted source SHA: `7ad720c272b5a400eb83cffef80661c78ed8b952`;
+- clean Release CI run: `39517013992`, artifact `12307089744`;
+- DLL: `BiteCountdown.dll`, assembly/file version `1.0.8.0`;
+- accepted SHA-256: `b583e92c76082799fa5323545adc737aab098542de8694ac0e2bfcf15a68bc76`;
+- acceptance evidence: candidate log records installed digest verification; on 2026-10-27 the user explicitly confirmed the build works and authorized stable promotion;
+- publication: pending immutable-artifact workflow verification; never rebuild as 1.0.8.
+
+**Production READY evidence:** `ApplyRingVisual` is the final wait-phase colour writer; `EnsureRingObject` sets the initial inactive colour. Both use `RingWaitAlpha=0.25`. `FadeRingAfterBite` already captures and decreases effective alpha and remains unchanged. The exact candidate passed source/version/constant CI guards. The production delta is limited to opacity plus version; all other behavior remains under the accepted 1.0.7 baseline.
+
+## Historical stable runtime — 1.0.7
 
 Accepted 2026-10-17: the user tested the exact replacement DLL without calibration,
 confirmed correct behavior/feel and explicitly approved stable release. The normal
