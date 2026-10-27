@@ -13,7 +13,10 @@ Accepted by the user on 2026-10-27 after testing the installed 1.0.8 candidate. 
 - DLL: `BiteCountdown.dll`, assembly/file version `1.0.8.0`;
 - accepted SHA-256: `b583e92c76082799fa5323545adc737aab098542de8694ac0e2bfcf15a68bc76`;
 - acceptance evidence: candidate log records installed digest verification; on 2026-10-27 the user explicitly confirmed the build works and authorized stable promotion;
-- publication: pending immutable-artifact workflow verification; never rebuild as 1.0.8.
+- stable publication CI: `40430916438` ([successful workflow](https://github.com/NikichMods/BiteCountdown/actions/runs/40430916438));
+- GitHub Release: [v1.0.8](https://github.com/NikichMods/BiteCountdown/releases/tag/v1.0.8), ID `424932166`, tag targets exact accepted candidate source;
+- published DLL asset ID `680024463`, GitHub SHA-256 digest `b583e92c76082799fa5323545adc737aab098542de8694ac0e2bfcf15a68bc76` matches the installed and CI-tested artifact exactly;
+- publication reused the immutable accepted 1.0.8 DLL; no rebuild or payload substitution.
 
 **Production READY evidence:** `ApplyRingVisual` is the final wait-phase colour writer; `EnsureRingObject` sets the initial inactive colour. Both use `RingWaitAlpha=0.25`. `FadeRingAfterBite` already captures and decreases effective alpha and remains unchanged. The exact candidate passed source/version/constant CI guards. The production delta is limited to opacity plus version; all other behavior remains under the accepted 1.0.7 baseline.
 
