@@ -9,7 +9,7 @@ The ring contracts around the bobber during the game's real waiting time, then b
 ## What it changes
 
 - Adds an in-world countdown ring around the bobber.
-- Follows the full native bite-wait interval.
+- Follows the full native bite-wait interval with a subtle, constant-opacity ring.
 - Appears again if you miss a hook and vanilla starts another wait.
 
 ## What it does not change

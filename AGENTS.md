@@ -14,9 +14,9 @@ Before substantive technical work, read the current `ENGINEERING_RULES.md`, `CI_
 - Mod stack: **BepInEx / Harmony**
 - BepInEx GUID: `nikich.bitecountdown`
 - Stable installed DLL: `BiteCountdown.dll`
-- Current accepted stable runtime baseline: **1.0.7**
+- Current accepted stable runtime baseline: **1.0.8**
 
-The public-name change is documentation/release metadata only. Keep the repository slug, namespace, GUID, assembly name and installed DLL identity stable. The immutable accepted 1.0.7 binary still reports `Bite Countdown` as its BepInEx plugin name and in diagnostics; that is expected and is not a different mod. Do not rebuild or replace that binary merely to update its display name.
+The public-name change is documentation/release metadata only. Keep the repository slug, namespace, GUID, assembly name and installed DLL identity stable. The immutable accepted 1.0.8 binary still reports `Bite Countdown` as its BepInEx plugin name and in diagnostics; that is expected under the public name **Fishing Bite Countdown**. Do not rebuild or replace an accepted binary solely to update its display name.
 
 Do not reintroduce the earlier rod-balance product concept into runtime or release naming.
 
@@ -58,16 +58,15 @@ Follow the global host-native-first gate.
 - No permanent Harmony `Update()` patch, broad polling, or parallel fishing state machine.
 - Unsupported runtime states fail closed by disabling only the countdown.
 
-## Accepted stable 1.0.7 visual behavior
+## Current accepted 1.0.8 visual behavior
 
 - start scale: `1.55`;
 - end scale at native bite entry: `0.26`;
 - continue shrinking at the same speed and linearly fade alpha to zero over `0.40` game seconds after bite entry;
-- alpha at full wait: `0.34`;
-- alpha near bite: `0.58`;
+- alpha throughout the native bite wait: constant `0.25`;
 - sprite-local visual correction: `X=-2, Y=-2` game pixels. This preserves the accepted right-facing placement and mirrors the horizontal correction for left-facing fishing;
 - ring base RGB: `0.60, 0.82, 0.92`;
-- alpha remains `0.34 -> 0.58`;
+- after the bite starts, alpha fades linearly from `0.25` to zero over `0.40` game seconds;
 - once per native wait, sample final `RenderSettings.ambientLight` at end-of-frame and scale RGB by a bounded factor `0.62 -> 1.00` based on ambient grayscale;
 - brightness adaptation must have no direct dependency on Keeper's Lantern or any other lighting mod.
 
@@ -83,6 +82,10 @@ lighting remain unchanged. No clip/audio synchronization is claimed. On 2026-10-
 the user runtime-tested the exact 1.0.7 DLL and explicitly accepted stable release.
 Frozen runtime source: `2f513ebc9b527910645db4535372c7a4269142b5` / `v1.0.7`.
 Publish the exact accepted DLL; never substitute a later rebuild under this version.
+
+## 1.0.8 acceptance
+
+On 2026-10-27 the user confirmed that the exact installed 1.0.8 candidate works and approved its stable release. The only production delta from 1.0.7 is constant wait-phase alpha `0.25` in place of the prior `0.34 -> 0.58` ramp; the fade continues from `0.25`, with native mechanics, position, size and timing unchanged. Frozen candidate source: `7ad720c272b5a400eb83cffef80661c78ed8b952`. CI run `39517013992`, artifact `12307089744`, accepted DLL SHA-256 `b583e92c76082799fa5323545adc737aab098542de8694ac0e2bfcf15a68bc76`. Publish that exact artifact, never a rebuild.
 
 ## Diagnostics
 
